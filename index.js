@@ -57,7 +57,7 @@ function main (
     'data',
     chunk => promise.then(prev => {
       const shell = SHELL
-        ? (SHELL == 'true' ? true : shell)
+        ? (SHELL === 'true' ? true : SHELL)
         : false
 
       const content = String(chunk)
