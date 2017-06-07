@@ -88,7 +88,7 @@ function main (
   ).on(
     'error',
     chunk =>
-      stderr.write('[ERROR] stdin-for-each:\n' + indent(String(chunk), 4) + '\n')
+      stderr.write('[ERROR] (stdin-for-each) Cannot parse input stream:\n' + indent(String(chunk), 4) + '\n')
   )
 }
 
