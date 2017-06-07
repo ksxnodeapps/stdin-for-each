@@ -9,7 +9,7 @@ const input = readFileSync(resolve(__dirname, 'input.txt'), 'utf8').trim()
 const [success, failure, logs] = readdirSync(__dirname)
   .filter(item => /^unit[0-9]*$/.test(item))
   .map(unit =>
-    ['index.js', 'output.txt'].map(file => resolve(unit, file))
+    ['index.js', 'output.txt'].map(file => resolve(__dirname, unit, file))
   )
   .map(([index, output]) =>
     [require(index), readFileSync(output, 'utf8'), index]
