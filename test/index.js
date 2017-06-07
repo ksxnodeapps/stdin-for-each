@@ -16,7 +16,8 @@ const [success, failure, logs] = readdirSync(__dirname)
   )
   .reduce(([success, failure, logs], [test, output, index]) => jtry(
     () => {
-      const actualOutput = String(test(command, input)).trim()
+      const ret = test(command, input)
+      const actualOutput = String(ret.stdout).trim()
       strictEqual(actualOutput, output, `Failed at '${index}'`)
       return [success + 1, failure, logs]
     },
