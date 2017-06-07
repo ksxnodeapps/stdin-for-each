@@ -4,7 +4,7 @@ const {readdirSync, readFileSync} = require('fs')
 const {strictEqual} = require('assert')
 const jtry = require('just-try')
 const command = resolve(__dirname, '../index.js')
-const input = readFileSync(resolve(__dirname, 'input.txt'),'utf8').trim()
+const input = readFileSync(resolve(__dirname, 'input.txt'), 'utf8').trim()
 
 const [success, failure, logs] = readdirSync(__dirname)
   .filter(item => /^unit[0-9]*$/.test(item))
