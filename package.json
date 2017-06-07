@@ -13,7 +13,8 @@
     "indent-string": "^3.1.0"
   },
   "devDependencies": {
-    "standard": "10.0.2"
+    "standard": "10.0.2",
+    "just-try": "^2.0.1"
   },
   "scripts": {
     "remake-package-json": "node sh/remake-package-json",
