@@ -12,7 +12,7 @@ const [success, failure, logs] = readdirSync(__dirname)
     ['index.js', 'output.txt'].map(file => resolve(__dirname, unit, file))
   )
   .map(([index, output]) =>
-    [require(index), readFileSync(output, 'utf8'), index]
+    [require(index), readFileSync(output, 'utf8').trim(), index]
   )
   .reduce(([success, failure, logs], [test, output, index]) => jtry(
     () => {
