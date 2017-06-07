@@ -26,7 +26,7 @@ function main (
     OUTPUT_PREFIX = '',
     STDOUT_PREFIX = OUTPUT_PREFIX,
     STDERR_PREFIX = OUTPUT_PREFIX,
-    ENDCHUNK = '\n'
+    ENDCHUNK = ''
   } = env
 
   const [command, ...args] = argv.slice(2)
