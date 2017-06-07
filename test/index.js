@@ -18,7 +18,13 @@ const [success, failure, logs] = readdirSync(__dirname)
     () => {
       const ret = test(command, input)
       const actualOutput = String(ret.stdout).trim()
-      strictEqual(actualOutput, output, `Failed at '${index}'`)
+
+      strictEqual(actualOutput, output, [
+        `Failed at unit: ${index}`,
+        `    Actual: ${JSON.stringify(actualOutput)}`,
+        `    Expected: ${JSON.stringify(output)}`
+      ].join('\n'))
+
       return [success + 1, failure, logs]
     },
     error =>
@@ -26,7 +32,7 @@ const [success, failure, logs] = readdirSync(__dirname)
   ), [0, 0, []])
 
 logs.forEach(error =>
-  console.error('[FAILURE]', error)
+  console.error('[FAILURE] ' + error.message + '\n')
 )
 
 console.info('[SUMMARY]', {success, failure})
