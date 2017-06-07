@@ -36,4 +36,4 @@ logs.forEach(error =>
 )
 
 console.info('[SUMMARY]', {success, failure})
-require('process').exit(failure)
+require('process').exit(failure && 1)
