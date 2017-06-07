@@ -1,6 +1,6 @@
-# argv-to-list
+# stdin-for-each
 
-Print each command-line argument as a line
+For each for command-line
 
 ## Requirements
 
@@ -9,49 +9,46 @@ Print each command-line argument as a line
 ## Installation
 
 ```bash
-npm install --global argv-to-list
+npm install --global stdin-for-each
 ```
 
 ## Usage
 
 ### Basic
 
+**Syntax:**
+
 ```bash
-argv-to-list first second 'This argument contains spaces'
+foo | stdin-for-each command [args]
+foo | foreach command [args]
 ```
 
-**Output:** The following text would be printed to terminal screen
-
-```text
-first
-second
-This argument contains spaces
-```
-
-### Advanced
-
-#### Chunks of data
-
-Each argument is pushed to stdout seperately, that means there are each chunk of stdout for every one of them.
+* `foo`: Command that writes to stdout, e.g. `cat some-file.txt`, `echo hello`, etc.
 
 **Example:**
 
-```javascript
-const arguments = ['abc\ndef\nghi\njkl', 'foo\nbar']
-const {stdout} = require('child_process').spawn('argv-to-list', arguments)
-const print = chunk => console.log({chunk: String(chunk)})
-stdout.on('data', print)
-```
-
-This is the output:
+_File:_ `input.txt`
 
 ```text
-{ chunk: 'abc\ndef\nghi\njkl\n' }
-{ chunk: 'foo\nbar\n' }
+first line
+second line
+
+third line
+
 ```
 
-#### As a module
+_Command:_
 
-```typescript
-argvToList(input = process.argv, begin = 2, end?: number): void
+```bash
+cat input.txt | foreach bash -c 'echo ${CHUNK_INDEX}. size=$CHUNK_SIZE $CHUNK_CONTENT'
+```
+
+_Output:_
+
+```text
+0. size=10 first line
+1. size=11 second line
+2. size=0
+3. size=10 third line
+4. size=0
 ```
