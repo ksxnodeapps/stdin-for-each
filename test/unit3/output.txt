@@ -2,4 +2,3 @@
 1. size=11 second line
 2. size=0
 3. size=10 third line
-4. size=0
