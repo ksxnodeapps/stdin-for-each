@@ -7,7 +7,7 @@ const env = {
 }
 
 const args = [
-  "bash -c 'echo $CHUNK_INDEX. size=$CHUNK_SIZE $CHUNK_CONTENT'"
+  'echo "$CHUNK_INDEX. size=$CHUNK_SIZE $CHUNK_CONTENT"'
 ]
 
 module.exports = (command, input) =>

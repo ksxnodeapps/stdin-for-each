@@ -38,8 +38,8 @@ function main (
   let promise = Promise.resolve({status: 0})
   stdin.pipe(
     split(
-      SPLIT_MATCHER
-        ? vm.runInNewContext(
+      ...SPLIT_MATCHER
+        ? [vm.runInNewContext(
           SPLIT_MATCHER,
           {
             process,
@@ -51,8 +51,8 @@ function main (
             global,
             get self () { return this }
           }
-        )
-        : undefined,
+        )]
+        : [],
       {
         trailing: NOTRAILING === 'true'
       }
