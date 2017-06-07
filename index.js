@@ -1,11 +1,99 @@
 #! /usr/bin/env node
-const {argv} = require('process')
+'use strict'
 
-const run = (input = argv, begin = 2, end) =>
-  input.slice(begin, end).forEach(x => console.log(x))
+const split = require('split')
+const indent = require('indent-string')
+
+function main (
+  process = require('process'),
+  {
+    vm = require('vm'),
+    childProcess = require('child_process')
+  } = {}
+) {
+  const {
+    stdin,
+    stdout,
+    stderr,
+    argv = [],
+    env = {}
+  } = process
+
+  const {
+    MATCHER,
+    SPLIT_MATCHER = MATCHER,
+    SHELL,
+    OUTPUT_PREFIX = '',
+    STDOUT_PREFIX = OUTPUT_PREFIX,
+    STDERR_PREFIX = OUTPUT_PREFIX,
+    ENDCHUNK = '\n'
+  } = env
+
+  const [command, ...args] = argv.slice(2)
+  const writeout = chunk => stdout.write(STDOUT_PREFIX + chunk + ENDCHUNK)
+  const writeerr = chunk => stderr.write(STDERR_PREFIX + chunk + ENDCHUNK)
+
+  let chunkIndex = 0
+  let promise = Promise.resolve({status: 0})
+  stdin.pipe(
+    split(
+      SPLIT_MATCHER
+        ? vm.runInNewContext(
+          SPLIT_MATCHER,
+          {
+            process,
+            stdin,
+            argv,
+            env,
+            vm,
+            require,
+            global,
+            get self () { return this }
+          }
+        )
+        : undefined
+    )
+  ).on(
+    'data',
+    chunk => promise.then(prev => {
+      const shell = SHELL
+        ? (SHELL == 'true' ? true : shell)
+        : false
+
+      const content = String(chunk)
+
+      const variables = Object.assign({}, env, {
+        CHUNK_INDEX: chunkIndex,
+        CHUNK_SIZE: chunk.length,
+        CHUNK_CONTENT: content,
+        CHUNK_STRLEN: content.length,
+        PREVIOUS_RESPONSE: JSON.stringify(prev),
+        PREVIOUS_STATUS: prev.status,
+        PREVIOUS_SIGNAL: prev.signal
+      })
+
+      chunkIndex += 1
+
+      const subprocess = childProcess.spawn(command, args, {shell, env: variables})
+      subprocess.stdout.on('data', writeout)
+      subprocess.stderr.on('data', writeerr)
+
+      promise = new Promise(resolve => {
+        const listener = (status, signal) =>
+          resolve({env: variables, status, signal})
+
+        subprocess.on('exit', listener)
+      })
+    })
+  ).on(
+    'error',
+    chunk =>
+      stderr.write('[ERROR] stdin-for-each:\n' + indent(String(chunk), 4) + '\n')
+  )
+}
 
 if (require.main === module) {
-  run()
+  main()
 } else {
-  module.exports = run
+  module.exports = main
 }

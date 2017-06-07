@@ -8,6 +8,10 @@
   },
   "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
   "preferGlobal": true,
+  "dependencies": {
+    "split": "^1.0.0",
+    "indent-string": "^3.1.0"
+  },
   "devDependencies": {
     "standard": "10.0.2"
   },
